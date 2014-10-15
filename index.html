@@ -1,1 +1,80 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Programing T7</title>
+  <meta charset="UTF-8">
+  <style type="text/css">
+    #main_canvas{
+      border: 5px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id='main_canvas' width=800 height=400></canvas>
+<script type="text/javascript">
+  var canvas = document.getElementById('main_canvas');
+  var c2d = canvas.getContext('2d');
+
+  function draw_cor(){
+    c2d.beginPath();
+    c2d.lineWidth=1;
+    c2d.moveTo(270,80);
+    c2d.lineTo(270,330);
+    c2d.lineTo(530,330);
+    c2d.stroke();  
+  }
+
+  var draw_grid = function(x, y){
+    var i, j;
+    for(i=0; i<4; i++){
+      for(j=0; j<4; j++){
+         if(x===i && y===j){
+          c2d.fillRect(290+(40+20)*i, 90+(40+20)*j, 40, 40);
+         }else{
+          c2d.strokeRect(290+(40+20)*i, 90+(40+20)*j, 40, 40); 
+         }
+      }
+    }  
+  }
+
+  var draw_x_y = function(x, y){
+    c2d.fillRect(290 + (40+20) * x, 320, 40, 10);
+    c2d.fillRect(270, 90 + (40+20)*y, 10, 40);
+  }
+  
+  function x_or_y(){
+    return Math.random() > Math.random() ? "x" : "y";
+  }
+
+  function delay(){
+    return Math.random() > Math.random() ? 1 : -1;
+  }
+  var point = {
+    x: 0,
+    y: 0
+  }
+  
+  draw_grid(point.x,point.y);
+  x_interval = setInterval(function(){
+    c2d.clearRect(0, 0, canvas.width, canvas.height);
+
+    draw_cor();
+
+
+
+    var attr = x_or_y();
+    var d = delay();
+    point[attr] += d;
+    if(point[attr] > 3){
+      point[attr] = 3;
+    }
+    if(point[attr] < 0){
+      point[attr] = 0;
+    }
+    draw_x_y(point.x, point.y);
+    draw_grid(point.x,point.y);
+  }, 50);
+  
+</script>
+</body>
+</html>
