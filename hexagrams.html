@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>List of hexagrams of the I Ching</title>
+	<script type="text/javascript" src="hexagrams_data.js"></script>
+       <style>
+        #main {
+          width: 433px;
+          height: 433px;
+          position: absolute;
+          left: 1px;
+          top: 1px;
+        }
+
+        #main  td {
+          border: 1px solid #111;
+          font-size: 32px;
+          text-align: center;
+        }
+
+        #main  td.hexagram:hover {
+          border: 1px solid #111;
+          box-shadow: inset -2px 0px 8px #f00,0px -2px 8px #000,0px 2px 8px #9e038a,2px 0px 8px #0f0;
+          font-size: 32px;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        #detail{
+          left: 440px;
+          position: absolute;
+          top: 1px;
+          width: 720px;
+        }
+
+        #detail p {
+          background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAfCAYAAAASsGZ+AAAAPklEQVRIiWNgGDbgQrfsf2z4zkIXrOLEqkGWG7Vk1JJRS0YtGbVk1JJRS0YtGbVk1BISLVmTxv2f1pgulgAAkTMAwG5HQz8AAAAASUVORK5CYII=");
+          font-size: 24px;
+          line-height: 31px;
+          margin: 0 0 3px 0;
+          padding: 0 5px 0 5px;
+          width: 600px;
+        }
+
+       </style>
+</head>
+<body>
+<table id="main" cellpadding="1" cellspacing="1"></table>
+<div id='detail'></div>
+<script>
+  window.onload = function (argument) {
+     var main=document.getElementById('main');
+     var detail = document.getElementById("detail");
+     var lis = "";
+     for(var i=0;i<9;i++){
+       lis = lis + "<tr>"
+       for(var j=0; j<9; j++){
+         if(i==0){
+           if(j==8){
+            lis = lis + "<td class='none'>☯</td>";
+           }else{
+            var bagua = zhouyi.setting.egiht_trigram[7-j];
+            lis = lis + "<td title='" + bagua.name + "' class='above'>" + bagua.symbol +"</td>";
+           }
+         }else{
+          if(j==8){
+            var bagua = zhouyi.setting.egiht_trigram[i-1];
+            lis = lis + "<td title='" + bagua.name + "' class='above'>" + bagua.symbol +"</td>";
+          }else{
+            var hex = zhouyi.setting.egiht_trigram[7-j].trigram + zhouyi.setting.egiht_trigram[i-1].trigram;
+            var hexagram = "hexagram" + hex;
+            var ahexagram = zhouyi.hexagrams[hexagram];
+            lis = lis + "<td class='hexagram' title='" + ahexagram.name + "' data-hex='"+ hexagram +"'>" + ahexagram.symbol + "</td>";
+          }
+         }
+       }
+       lis = lis + "</tr>";
+     } 
+     main.innerHTML = lis;
+     lis = null;
+
+
+     main.addEventListener("mouseover", td_evt_handler, true);
+     main.addEventListener("click", td_evt_handler,  true);
+     
+     function td_evt_handler(evt){
+      var eot = evt.explicitOriginalTarget;
+      if(!!eot && !!eot.tagName){
+        if(eot.tagName.toLowerCase() == "td" && eot.className == 'hexagram'){
+          var ahexagram = zhouyi.hexagrams[eot.dataset["hex"]];
+          detail.innerHTML = hexagram_text(ahexagram);
+        }
+      }
+     }
+
+     function hexagram_text(hexagram){
+        return "<p>"+hexagram.name+"</p>" +
+                   "<p>"+hexagram.guaci+"</p>" +
+                   "<p>"+hexagram.tuanyue+"</p>" +
+                   "<p>"+hexagram.xiangyue+"</p>";
+     }
+  }
+</script>
+</body>
+</html>
