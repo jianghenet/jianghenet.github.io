@@ -97,8 +97,8 @@
                    "<p>"+hexagram.xiangyue+"</p>";
      }
 
-     if((/windows.*chrome/i).test.window.navigator.userAgent){
-       $("<p>You open this page in Google Chrome at Windows platform, which not support  all Unicode chars, you could not get al lthe hexagram. Sorry, I will fix this later. : ( <p>").insertBefor($(main));
+     if((/windows.*chrome/i).test(window.navigator.userAgent)){
+       confirm("You open this page in Google Chrome at Windows platform, which not support  all Unicode chars, you could not get al lthe hexagram. Sorry, I will fix this later. : (");
      }
   }
 </script>
