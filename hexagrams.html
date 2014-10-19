@@ -5,17 +5,6 @@
 	<title>List of hexagrams of the I Ching</title>
 	<script type="text/javascript" src="hexagrams_data.js"></script>
        <style>
-        @font-face{
-          font-family: chromebagua;
-          font-style: normal;
-          font-weight: normal;
-          src: url("CODE2002.TTF");
-        }
-       
-       .chromebagua{
-          font-family: chromebagua;
-        }
-        
         #main {
           width: 433px;
           height: 433px;
@@ -82,7 +71,7 @@
             var hex = zhouyi.setting.egiht_trigram[7-j].trigram + zhouyi.setting.egiht_trigram[i-1].trigram;
             var hexagram = "hexagram" + hex;
             var ahexagram = zhouyi.hexagrams[hexagram];
-            lis = lis + "<td class='hexagram chromebagua' title='" + ahexagram.name + "' data-hex='"+ hexagram +"'>" + ahexagram.symbol + "</td>";
+            lis = lis + "<td class='hexagram' title='" + ahexagram.name + "' data-hex='"+ hexagram +"'>" + ahexagram.symbol + "</td>";
           }
          }
        }
