@@ -3,6 +3,7 @@
 <head>
 	<meta charset='utf-8'>
 	<title>List of hexagrams of the I Ching</title>
+      <script type="text/javascript" src='jquery-2.1.1.min.js'></script>
 	<script type="text/javascript" src="hexagrams_data.js"></script>
        <style>
         #main {
@@ -81,17 +82,12 @@
      lis = null;
 
 
-     main.addEventListener("mouseover", td_evt_handler, true);
-     main.addEventListener("click", td_evt_handler,  true);
+     $(main).on("mouseover", "td.hexagram", td_evt_handler);
+     $(main).on("click", "td.hexagram", td_evt_handler);
      
      function td_evt_handler(evt){
-      var eot = evt.explicitOriginalTarget;
-      if(!!eot && !!eot.tagName){
-        if(eot.tagName.toLowerCase() == "td" && eot.className == 'hexagram'){
-          var ahexagram = zhouyi.hexagrams[eot.dataset["hex"]];
-          detail.innerHTML = hexagram_text(ahexagram);
-        }
-      }
+        var ahexagram = zhouyi.hexagrams[this.dataset["hex"]];
+        detail.innerHTML = hexagram_text(ahexagram);
      }
 
      function hexagram_text(hexagram){
@@ -99,6 +95,10 @@
                    "<p>"+hexagram.guaci+"</p>" +
                    "<p>"+hexagram.tuanyue+"</p>" +
                    "<p>"+hexagram.xiangyue+"</p>";
+     }
+
+     if((/windows.*chrome/i).test.window.navigator.userAgent){
+       $("<p>You open this page in Google Chrome at Windows platform, which not support  all Unicode chars, you could not get al lthe hexagram. Sorry, I will fix this later. : ( <p>").insertBefor($(main));
      }
   }
 </script>
