@@ -91,10 +91,23 @@
      }
 
      function hexagram_text(hexagram){
+
         return "<p>"+hexagram.name+"</p>" +
                    "<p>"+hexagram.guaci+"</p>" +
                    "<p>"+hexagram.tuanyue+"</p>" +
-                   "<p>"+hexagram.xiangyue+"</p>";
+                   "<p>"+hexagram.xiangyue+"</p>" +
+                   "<p>"+yaocis(hexagram.yaocis) + "</p>";
+     }
+
+     function yaocis(ys){
+      var yaoci = "";
+      for(var i=0; i<ys.length; i++){
+        yaoci = yaoci + ys[i].yaoci + "<br/>";
+        if(!!ys[i].xiangyue){
+          yaoci = yaoci + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +ys[i].xiangyue + "<br/>";
+        }
+      }
+      return yaoci;
      }
 
      if((/windows.*chrome/i).test(window.navigator.userAgent)){
