@@ -299,9 +299,9 @@ zhouyi = {
 			wenyanyue: null,
 			yong: null
 		},
-		hexagram31: {
-			above: [0,1,1],
-			below: [0,0,1],
+		hexagram13: {
+			above: [0,0,1],
+			below: [0,1,1],
 			name: "蛊",
 			symbol:"䷑",
 			guaci:"蛊元亨利涉大川先甲三日后甲三日",
@@ -719,9 +719,9 @@ zhouyi = {
 			wenyanyue: null,
 			yong: null
 		},
-		hexagram13: {
-			above: [0,0,1],
-			below: [0,1,1],
+		hexagram31: {
+			above: [0,1,1],
+			below: [0,0,1],
 			name: "渐",
 			symbol:"䷴",
 			guaci:"渐女归吉利贞",
