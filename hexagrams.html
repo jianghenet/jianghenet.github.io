@@ -6,6 +6,12 @@
       <script type="text/javascript" src='jquery-2.1.1.min.js'></script>
 	<script type="text/javascript" src="hexagrams_data.js"></script>
        <style>
+       
+       @font-face {
+          font-family: 'hxtypeface';
+          src: url('hxtypeface.ttf')  format('truetype');
+        }
+        
         #main {
           width: 433px;
           height: 433px;
@@ -26,6 +32,10 @@
           font-size: 32px;
           text-align: center;
           cursor: pointer;
+        }
+        
+        .winchrome{
+          font-family: hxtypeface;
         }
 
         #detail{
@@ -119,7 +129,9 @@
      }
 
      if((/windows.*chrome/i).test(window.navigator.userAgent)){
-       confirm("You open this page in Google Chrome at Windows platform, which not support  all Unicode chars, you could not get al lthe hexagram. Sorry, I will fix this later. : (");
+       /*confirm("You open this page in Google Chrome at Windows platform, which not support  all Unicode chars, you could not get al lthe hexagram. Sorry, I will fix this later. : (");*/
+       
+       $("td.hexagram").addClass("winchrome");
      }
   }
 </script>
