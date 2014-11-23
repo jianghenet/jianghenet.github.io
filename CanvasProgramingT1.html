@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Canvas Programing T1</title>
+	<meta charset="UTF-8">
+	<style type="text/css">
+	  #main_canvas{
+	  	border: 5px solid #000;
+	  }
+	</style>
+</head>
+<body>
+	<canvas id='main_canvas' width=800 height=400></canvas>
+<script type="text/javascript">
+	var canvas = document.getElementById('main_canvas');
+	var c2d = canvas.getContext('2d');
+	
+	var draw_sun = function(x_in_canvas, y_in_canvas, r){
+		c2d.fillStyle = "#000000";
+		c2d.beginPath();
+		c2d.arc(x_in_canvas, y_in_canvas, r, 0, Math.PI*2, true);
+		c2d.closePath();
+		c2d.fill();
+	};
+
+	canvas.onmousemove = function cnvs_getCoordinates(e)
+	{
+		var x_in_canvas = e.clientX - (canvas.offsetLeft + canvas.clientLeft);
+		var y_in_canvas = e.clientY - (canvas.offsetTop + canvas.clientTop);
+
+		var min_diameter =  18;
+		var right_to = canvas.width - x_in_canvas;
+		var bottom_to = canvas.height - y_in_canvas;
+		var r_left = Math.min(Math.max(min_diameter, x_in_canvas), Math.max(min_diameter, y_in_canvas));
+		var r_right = Math.min(Math.max(min_diameter, right_to), Math.max(min_diameter, bottom_to));
+		var r = Math.min(r_left, r_right)/2;
+		
+		draw_sun(x_in_canvas, y_in_canvas, r);
+	}
+	
+	setInterval(function(){
+	  c2d.clearRect(0, 0, 800, 400);
+	}, 200);
+	
+
+    
+	
+</script>
+</body>
+</html>
