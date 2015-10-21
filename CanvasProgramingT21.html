@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Canvas Programing T21</title>
+	<meta charset="UTF-8">
+	<style type="text/css">
+	  #main_canvas{
+	  	border: 5px solid #000;
+	  }
+    #score{
+      position: absolute;
+      left: 850px;
+      top: 30px;
+      font-size: 30px;
+      padding-top: 10px;
+    }
+    .gain_score{
+      color: green;
+      font-size: 50px;
+      padding-top: 0px;
+    }
+	</style>
+</head>
+<body>
+	<canvas id='main_canvas' width=800 height=400></canvas>
+  <div id='score'>0</div>
+<script type="text/javascript">
+  var letters = ["A", "B", "C", "D", "E", "F", "G",
+               "H", "I", "J", "K", "L", "M", "N",
+               "O", "P", "Q", "R", "S", "T", "U",
+               "V", "W", "X", "Y", "Z"];
+  function r(){
+    var idx = (Math.round(Math.random()*1000)%26);
+    return letters[idx];
+  };
+	var canvas = document.getElementById('main_canvas');
+	var ctx = canvas.getContext('2d');
+  var i = 0;
+  var score = 0;
+  ctx.fillStyle="red";
+  ctx.font="30px Verdana";
+  var ms = [r(), r(), r(), r(), r(), r()];
+  var ys = [0, 0, 0, 0, 0, 0];
+  var score_div = document.getElementById('score');
+  window.requestAnimationFrame(function(){
+    i= (i+1)%400;
+    ctx.clearRect(0,0,600,400);
+    ms.forEach(function(letter, idx, arr, undef){
+      ctx.fillText(letter, idx*90+20, ys[idx]);
+      ys[idx] = (ys[idx]+1)%400;
+    });
+    window.requestAnimationFrame(arguments.callee);
+  });
+  document.onkeypress = function(evt){
+    if(97 <= evt.charCode && evt.charCode <= 122){
+      var chr = evt.key.toUpperCase();
+      var indx = ms.indexOf(chr);
+      ms[indx] = r();
+      ys[indx] = 0;
+      score = score + 1;
+      score_div.innerHTML=score;
+      score_div.className = 'gain_score';
+      setTimeout(function(){
+        score_div.className = '';
+      }, 500);
+    }
+  }
+</script>
+</body>
+</html>
