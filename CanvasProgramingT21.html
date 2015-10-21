@@ -51,9 +51,11 @@
     });
     window.requestAnimationFrame(arguments.callee);
   });
-  document.onkeypress = function(evt){
-    if(97 <= evt.charCode && evt.charCode <= 122){
-      var chr = evt.key.toUpperCase();
+  document.onkeypress = function(event){
+    event = event || window.event;
+    var code = event.keyCode || event.charCode || event.which;
+    if(97 <= code && code <= 122){
+      var chr = String.fromCharCode(code).toUpperCase();
       var indx = ms.indexOf(chr);
       ms[indx] = r();
       ys[indx] = 0;
