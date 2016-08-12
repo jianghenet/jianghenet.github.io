@@ -23,18 +23,49 @@
     var start = {
       x: 400,
       y: 300
+    };
+    
+    var boors = [];
+    for(var i = 0; i < 12; i++){
+      var x = Math.floor(Math.random()*600 + 50)
+      var y = Math.floor(Math.random()*400 + 50);
+      boors.push({x: x, y: y});
+    }
+    
+    function check(x, y){
+      return boors.some(function(coord){
+        return (Math.pow((coord.x - x), 2) + Math.pow((coord.y - y), 2)) <= Math.pow(48, 2)
+      });
+    }
+    
+    function draw_boors(){
+      boors.forEach(function(boor){
+        ctx.beginPath();
+        ctx.arc(boor.x, transCoordY(boor.y), 32, 0, Math.PI*2, true);
+        ctx.closePath();
+        ctx.fillStyle = 'yellow';
+        ctx.fill();
+      })
     }
 
     var ball = {
       x: start.x,
       y: start.y,
-      radius: 25,
+      radius: 16,
       color: 'blue',
       draw: function() {
         ctx.beginPath();
         ctx.arc(this.x, transCoordY(this.y), this.radius, 0, Math.PI*2, true);
         ctx.closePath();
-        ctx.fillStyle = this.color;
+        
+        if(check(this.x, this.y)){
+          ctx.fillStyle = 'red';
+        }else{
+          ctx.fillStyle = this.color;
+        }
+        
+        
+        
         ctx.fill();
       },
       
@@ -50,6 +81,8 @@
 
     function draw() {
       ctx.clearRect(0,0, canvas.width, canvas.height);
+      
+      draw_boors();
       ball.draw();
       ball.calc();
       
