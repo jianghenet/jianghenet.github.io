@@ -1,0 +1,104 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test Feedback</title>
+</head>
+<body id="body">
+  <canvas id='main_canvas' width='800px' height='600px' style='border-left: 1px dotted #333;border-bottom: 1px dotted #111;'></canvas>
+  <script type="text/javascript">
+    var canvas = document.getElementById('main_canvas');
+    var ctx = canvas.getContext('2d');
+    
+    function transCoordY(y){
+      return canvas.height - y;
+    }
+    
+    function feedback(a, b){
+      return a + b * 0.8;
+    }
+
+    var input_x=0, input_y=0;
+    var output_x = 0, output_y = 0;
+
+    var start = {
+      x: 400,
+      y: 300
+    }
+
+    var ball = {
+      x: start.x,
+      y: start.y,
+      radius: 25,
+      color: 'blue',
+      draw: function() {
+        ctx.beginPath();
+        ctx.arc(this.x, transCoordY(this.y), this.radius, 0, Math.PI*2, true);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      },
+      
+      calc: function(){
+        output_x = feedback(input_x, output_x);
+        output_y = feedback(input_y, output_y);
+      
+        this.x = start.x + Math.floor(output_x * 10);
+        this.y = start.y + Math.floor(output_y * 10);
+      }
+    };   
+
+
+    function draw() {
+      ctx.clearRect(0,0, canvas.width, canvas.height);
+      ball.draw();
+      ball.calc();
+      
+      setTimeout(draw, 100);
+    }
+
+    document.onkeydown = function(evt){
+      switch(evt.keyCode){
+        case 37:
+          left();
+          break;
+        case 38:
+          up();
+          break;
+        case 39:
+          right();
+          break;
+        case 40:
+          down();
+          break;
+      }
+    }
+
+    function up(){
+      input_y += 1;
+      if(input_y > 5){
+        input_y = 5;
+      }
+    }
+    function down(){
+      input_y -= 1;
+      if(input_y < -4){
+        input_y = -4;
+      }
+    }
+    function left(){
+      input_x -= 1;
+      if(input_x < -4){
+        input_x = -4;
+      }
+    }
+    function right(){
+      input_x += 1;
+      if(input_x > 5){
+        input_x = 5;
+      }
+    }
+
+    draw();
+  </script>
+</body>
+</html>
