@@ -1,13 +1,5 @@
 function feedback(a, b){
-  return a + b * 0.8;
-}
-
-function no_feedback(a, b){
-  return a;
-}
-
-function yell_feedback(a, b){
-  return a + a - b * 0.8;
+  return a + b * 0.9;
 }
 
 function draw_ball(a_ball, color){

@@ -6,13 +6,7 @@
   <script type="text/javascript" src='javascripts/ball.js'></script>
 </head>
 <body id="body">
-  <canvas id='main_canvas' tabindex='1' width='800px' height='600px' style='border-left: 1px dotted #333;border-bottom: 1px dotted #111;'></canvas>
-  <form action="" method="get" id='feedback_options'>
-    <label>Chose feedback type</label>
-    <label><input type="radio" checked=true name="feedback_type" value='1'/>P</label>
-    <label><input type="radio" name="feedback_type" value='0'/>0</label>
-    <label><input type="radio" name="feedback_type" value='-1'/>N</label>
-  </form>
+  <canvas id='main_canvas' width='800px' height='600px' style='border-left: 1px dotted #333;border-bottom: 1px dotted #111;'></canvas>
   <script type="text/javascript">
     var canvas = document.getElementById('main_canvas');
     var ctx = canvas.getContext('2d');
@@ -53,24 +47,9 @@
     console.log(MAX_X, MAX_Y);
 
     function calc_ball(){
-      switch(document.forms.feedback_options.elements.namedItem('feedback_type').value - 0){
-        case 1:
-            output_x = feedback(input_x, output_x);
-            output_y = feedback(input_y, output_y);
-            break;
-        case 0:
-            output_x = no_feedback(input_x, output_x);
-            output_y = no_feedback(input_y, output_y);
-            break;
-        case -1:
-            output_x = yell_feedback(input_x, output_x);
-            output_y = yell_feedback(input_y, output_y);
-            break;
-        default: 
-            output_x = no_feedback(input_x, output_x);
-            output_y = no_feedback(input_y, output_y);
-      }
-    
+      output_x = feedback(input_x, output_x);
+      output_y = feedback(input_y, output_y);
+      
       ball.x = start.x + Math.floor(output_x * SPEED);
       if(ball.x > canvas.width){ball.x=canvas.width;}
       
@@ -79,9 +58,9 @@
     }
 
     function draw() {
-      ctx.clearRect(0,0, canvas.width, canvas.height);
+      //ctx.clearRect(0,0, canvas.width, canvas.height);
     
-      draw_boors();
+      //draw_boors();
       
       if(check(ball.x, ball.y, ball.r)){
         draw_ball(ball, 'red');
@@ -89,10 +68,10 @@
         draw_ball(ball, 'blue');
       }
       calc_ball();
-      setTimeout(draw, 10);
+      setTimeout(draw, 32);
     }
 
-    canvas.onkeydown = function(evt){
+    document.onkeydown = function(evt){
       switch(evt.keyCode){
         case 37:
           left();
@@ -117,8 +96,8 @@
     }
     function down(){
       input_y += 1;
-      if(input_y > MAX_Y){
-        input_y = MAX_Y;
+      if(input_y > MAX_Y/2){
+        input_y = MAX_Y/2;
       }
     }
     function left(){
@@ -129,8 +108,8 @@
     }
     function right(){
       input_x += 1;
-      if(input_x > MAX_X){
-        input_x = MAX_X;
+      if(input_x > MAX_X/2){
+        input_x = MAX_X/2;
       }
     }
 
