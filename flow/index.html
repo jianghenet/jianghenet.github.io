@@ -1,0 +1,120 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test Feedback</title>
+  <script type="text/javascript" src='javascripts/lib.js'></script>
+  <script type="text/javascript" src='javascripts/ball.js'></script>
+</head>
+<body id="body">
+  <canvas id='main_canvas' width='800px' height='600px' style='border-left: 1px dotted #333;border-bottom: 1px dotted #111;'></canvas>
+  <script type="text/javascript">
+    var canvas = document.getElementById('main_canvas');
+    var ctx = canvas.getContext('2d');
+
+    var boors = [];
+    for(var i = 0; i < 12; i++){
+      var x = (Math.floor(Math.random() * 100) % 12) * 80 + 40;
+      var y = i * 65;
+      var aball = new Ball(x,y, 32);
+      boors.push(aball);
+    }
+
+    function draw_boors(){
+      boors.forEach(function(boor){
+        boor.down();
+        if(boor.y > canvas.height){
+          boor.renew();
+        }
+        draw_ball(boor, '#EEB422');
+      })
+    }
+
+    function check(x, y, r){
+      return boors.some(function(coord){
+        return (Math.pow((coord.x - x), 2) + Math.pow((coord.y - y), 2)) <= Math.pow((coord.r + r), 2)
+      });
+    }
+
+    var input_x=0, input_y=0;
+    var output_x = 0, output_y = 0;
+
+    var start = {
+      x: 0,
+      y: 0
+    };
+
+    var ball = new Ball(start.x, start.y, 16)
+
+    var X_SPEED = 13;
+    var Y_SPEED = 3;
+
+    function calc_ball(){
+      start.x = input_x;
+      if(start.x > canvas.width){start.x=canvas.width;}
+      start.y = input_y;
+      if(start.y > canvas.height){start.y = canvas.height}
+      ball.x = start.x;
+      ball.y = start.y;
+    }
+
+    function draw() {
+      ctx.clearRect(0,0, canvas.width, canvas.height);
+
+      draw_boors();
+
+      if(check(ball.x, ball.y, ball.r)){
+        draw_ball(ball, 'red');
+      }else{
+        draw_ball(ball, 'blue');
+      }
+      calc_ball();
+
+      requestAnimationFrame(draw);
+    }
+
+    document.onkeydown = function(evt){
+      switch(evt.keyCode){
+        case 37:
+          left();
+          break;
+        case 38:
+          up();
+          break;
+        case 39:
+          right();
+          break;
+        case 40:
+          down();
+          break;
+      }
+    }
+
+    function up(){
+      input_y -= Y_SPEED;
+      if(input_y < 0){
+        input_y = 0;
+      }
+    }
+    function down(){
+      input_y += Y_SPEED;
+      if(input_y > MAX_Y/2){
+        input_y = MAX_Y/2;
+      }
+    }
+    function left(){
+      input_x -= X_SPEED;
+      if(input_x < 0){
+        input_x = 0;
+      }
+    }
+    function right(){
+      input_x += X_SPEED;
+      if(input_x > MAX_X/2){
+        input_x = MAX_X/2;
+      }
+    }
+
+    draw();
+  </script>
+</body>
+</html>
