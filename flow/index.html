@@ -13,17 +13,22 @@
 
     var boors = [];
     for(var i = 0; i < 12; i++){
-      var x = (Math.floor(Math.random() * 100) % 12) * 80 + 40;
+      var x = randomX();
       var y = i * 65;
       var aball = new Ball(x,y, 32);
+      aball.speed = (Math.floor(Math.random() * 100) % 18) + 3;
       boors.push(aball);
+    }
+    
+    function randomX(){
+      return (Math.floor(Math.random() * 100) % 12) * 80 + 40;    
     }
 
     function draw_boors(){
       boors.forEach(function(boor){
         boor.down();
         if(boor.y > canvas.height){
-          boor.renew();
+          boor.renew(randomX(), (Math.floor(Math.random() * 100) % 18) + 3);
         }
         draw_ball(boor, '#EEB422');
       })
@@ -33,6 +38,33 @@
       return boors.some(function(coord){
         return (Math.pow((coord.x - x), 2) + Math.pow((coord.y - y), 2)) <= Math.pow((coord.r + r), 2)
       });
+    }
+    
+    function ball_move_to(ball, x,y){
+      if(!ball.mrate){
+        ball.mrate = (y-ball.y)/(x-ball.x);
+      }
+    
+      if(ball.x < x){
+        ball.x += 1;
+      }
+      if(ball.y < y){
+        ball.y += ball.mrate;
+      }
+      
+      if(ball.x >= x && ball.y >= y && !ball.boomed){
+        ball.r = 8;
+      }
+
+      if(ball.r == 8){
+        ball.timeout +=1;
+      }
+      
+      if(ball.timeout >= 6){
+        ball.r = 3;
+        ball.boomed = true;
+      }
+      draw_ball(ball, '#EEB422');
     }
 
     var input_x=0, input_y=0;
@@ -46,7 +78,7 @@
     var ball = new Ball(start.x, start.y, 16)
 
     var X_SPEED = 13;
-    var Y_SPEED = 3;
+    var Y_SPEED = 13;
 
     function calc_ball(){
       start.x = input_x;
@@ -56,11 +88,15 @@
       ball.x = start.x;
       ball.y = start.y;
     }
+    
+    var bullet = new Bullet(3,45, 3);
 
     function draw() {
       ctx.clearRect(0,0, canvas.width, canvas.height);
-
+      
       draw_boors();
+      
+      ball_move_to(bullet, 80, 234);
 
       if(check(ball.x, ball.y, ball.r)){
         draw_ball(ball, 'red');
