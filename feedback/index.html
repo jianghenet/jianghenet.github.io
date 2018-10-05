@@ -10,37 +10,38 @@
   <script type="text/javascript">
     var canvas = document.getElementById('main_canvas');
     var ctx = canvas.getContext('2d');
-        
+
     var boors = [];
     for(var i = 0; i < 12; i++){
       var x = Math.floor(Math.random()*600 + 50)
       var y = Math.floor(Math.random()*400 + 50);
-      var aball = new Ball(x,y, 32);
+      var aball = new SecurityBall(x,y, 32);
       boors.push(aball);
     }
-    
+
     function draw_boors(){
       boors.forEach(function(boor){
+        boor.patrol();
         draw_ball(boor, '#EEB422');
       })
     }
-    
+
     function check(x, y, r){
       return boors.some(function(coord){
         return (Math.pow((coord.x - x), 2) + Math.pow((coord.y - y), 2)) <= Math.pow((coord.r + r), 2)
       });
     }
-    
+
     var input_x=0, input_y=0;
     var output_x = 0, output_y = 0;
-    
+
     var start = {
       x: 0,
       y: 0
     };
 
     var ball = new Ball(start.x, start.y, 16)
-    
+
     var SPEED = 1;
     var MAX_X = Math.floor(canvas.width / SPEED);
     var MAX_Y = Math.floor(canvas.height / SPEED);
@@ -49,19 +50,19 @@
     function calc_ball(){
       output_x = feedback(input_x, output_x);
       output_y = feedback(input_y, output_y);
-      
+
       ball.x = start.x + Math.floor(output_x * SPEED);
       if(ball.x > canvas.width){ball.x=canvas.width;}
-      
+
       ball.y = start.y + Math.floor(output_y * SPEED);
       if(ball.y > canvas.height){ball.y = canvas.height}
     }
 
     function draw() {
       ctx.clearRect(0,0, canvas.width, canvas.height);
-    
+
       draw_boors();
-      
+
       if(check(ball.x, ball.y, ball.r)){
         draw_ball(ball, 'red');
       }else{
