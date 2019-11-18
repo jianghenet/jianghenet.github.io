@@ -6,6 +6,12 @@ class Ball{
   }
 }
 
+class GemBall extends Ball{
+  constructor(x, y, r){
+    super(x, y, r);
+  }
+}
+
 class SecurityBall extends Ball{
   constructor(x, y, r){
     super(x, y, r);
