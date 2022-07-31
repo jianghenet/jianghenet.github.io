@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图形化计算公约数</title>
+</head>
+<body>
+  <div id="main-container">
+    a: <input type="text" id="input-a">
+    b: <input type="text" id="input-b">
+    <button onclick="setAndStart()">Go</button>
+    <div id="result">
+      <canvas id="this-canvas" width="1000" height="800"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const Colors = [
+                    "#FF0000","#00FFFF","#0000FF",
+                    "#0000A0","#ADD8E6",
+                    "#FFA500","#800080","#A52A2A","#FFFF00",
+                    "#800000","#00FF00","#008000","#FF00FF"
+                  ];
+
+    var result=document.getElementById("result");
+    var canvas = document.getElementById("this-canvas");
+    var inputA = document.getElementById("input-a");
+    var inputB = document.getElementById("input-b");
+
+    var ctx = canvas.getContext("2d");
+
+
+    var processes = [];
+    function gcd(a, b) {
+      if(a<b){
+        let c = a;
+        a=b;
+        b=c;
+      }
+      if (b == 0) {
+        return a;
+      }
+      processes.push({
+        a,
+        b,
+        quotient: Math.floor(a/b),
+        remainder: a%b,
+      });
+      return gcd(b, a % b);
+    }
+
+    function lcm(a, b) {
+      return a * b / gcd(a, b);
+    }
+
+    function draw(color, x,y,w,h){
+      ctx.strokeStyle = color
+      ctx.strokeRect(x, y, w, h);
+    }
+
+    function setAndStart(){
+      let timeoutIdx = 0;
+      var a = parseInt(inputA.value);
+      var b = parseInt(inputB.value);
+      if( a.toString() !==inputA.value || b.toString()!=inputB.value) {
+        alert("请输入整数");
+        return;
+      }
+
+      var width = a;
+      var height = b;
+      if(a < b){
+        width = b;
+        height = a;
+      }
+
+
+      processes = [];
+
+      let gys = gcd(a, b);
+      if(gys == 1){
+        alert("公约数为1,无公约数");
+        return;
+      }
+      ctx.clearRect(0, 0, 1000, 800);
+      ctx.strokeStyle = "#000000";
+      ctx.strokeRect(10, 10, width, height);
+
+      let nextX = 10;
+      let nextY = 10;
+      processes.forEach(function(process, index){
+        for(let i = 0; i<process.quotient; i++){
+
+          let color = Colors[index%Colors.length],
+          x= nextX, y= nextY, w= process.b, h = process.b;
+          let d = () => {
+            draw(color, x, y, w, h);
+          }
+          timeoutIdx += 1;
+          setTimeout(d, 1500*timeoutIdx);
+
+          if(nextX + process.b  > width){
+            if(nextY + process.b <= height){
+              nextY += process.b;
+            }
+          }else{
+           nextX += process.b;
+          }
+        }
+
+      });
+    }
+
+  </script>
+</body>
+</html>
