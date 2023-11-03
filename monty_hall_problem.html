@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monty Hall Problem</title>
+  <style>
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      padding: 10px;
+    }
+    .grid-item {
+      padding: 20px;
+      font-size: 30px;
+      text-align: center;
+    }
+    #puzzle > th,td {
+      width: 180px;
+    }
+    #puzzle > tbody td {
+      height: 180px;
+    }
+    #puzzle > tbody td.mystery::after{
+      content: "🚪";
+      font-size: 130px;
+    }
+    #puzzle > tbody td.show-0::after{
+      content: "🐐";
+      font-size: 130px;
+    }
+    #puzzle > tbody td.show-1::after{
+      content: "🏎️";
+      font-size: 130px;
+    }
+    input[type=radio]{
+      width: 36px;
+      height: 36px;
+    }
+    div#result-counts {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid-item">
+      <table id="puzzle">
+        <thead>
+          <tr>
+            <th>
+              <label for="choices0">1号门</label>
+            </th>
+            <th>
+              <label for="choices1">2号门</label></th>
+            </th>
+            <th>
+              <label for="choices2">3号门</label></th>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td><input type="radio" name="choices" onchange="onOptionsClick(this)" id="choices0" value="0"/></td>
+            <td><input type="radio" name="choices" onchange="onOptionsClick(this)" id="choices1" value="1"></td>
+            <td><input type="radio" name="choices" onchange="onOptionsClick(this)" id="choices2" value="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div><button onclick="massAutoPlay(1000)"> 自动运行 1000 次</button></div>
+      <div id="new-bu-wrapper"><button id="new-game-btn" onclick="makePuzzleVisualize()">新开局</button></div>
+      <div id="open-door-wrapper" style="display:none"><button id="open-door-btn" onclick="hostOpenDoor()">主持人开门</button></div>
+      <div id="make-result-wrapper" style="display:none"><button id="no-change-btn" onclick="noChangeChoice()">不换门</button> <button id="change-btn" onclick="changeChoice()">换门</button></div>
+    </div>
+    <div class="grid-item"><div id="result-counts"></div></div>
+  </div>
+  <div>
+    <h4>Tip</h4>
+    <p>
+      当换门时，游戏发生了改变。游戏的命中概率定义改变为：从3个选项中任选2个，其中<b>任一</b>选项命中的概率。组合为：0+0，0+1，1+0；出现1的概率为2/3。
+      <br/>
+      如果不换，游戏保持概率不变：从3个选项中选择1个，选项命中的概率。组合为0, 1, 0；出现1的概率为1/3。
+      <br/>
+      主持人开门改变游戏的规则后，整体概率从3选一，变为2选一。从结果可见整体概率为1/2。
+      <br/>
+      综上可知，应该换门。
+    </p>
+  </div>
+
+  <script>
+
+    class MontyHallGame{
+      constructor(){
+        this.player = new Player(this.puzzle);
+        this.hoster = new Hoster(this.puzzle);
+        this.gameActived = false;
+      }
+
+      reset(){
+        this.puzzle = [0,0,1].sort(()=>Math.random()-0.5);
+        this.carIndex = this.puzzle.indexOf(1);
+        this.player.reset(this.puzzle);
+        this.hoster.reset(this.puzzle);
+        this.gameActived = true;
+      }
+
+      complete(){
+        this.gameActived = false;
+      }
+
+      playerChose(){
+        this.player.chose();
+      }
+
+      playerChange(){
+        this.player.change(this.openDoorIndex);
+      }
+
+      isPlayerWin(){
+        return this.player.chosedIdx == this.carIndex;
+      }
+
+      openDoor(){
+        this.openDoorIndex = this.hoster.openDoor(this.player.chosedIdx, this.carIndex);
+      }
+    }
+
+    class Player{
+      constructor(puzzle){
+        this.puzzle = puzzle;
+      }
+      reset(puzzle){
+        this.puzzle = puzzle;
+        this.chosedIdx = null;
+        this.oldChoseIdx = null;
+        this.chosedIdxChanged = null;
+      }
+
+      setChosedIdx(idx){
+        this.oldChoseIdx = this.chosedIdx;
+        this.chosedIdx = idx;
+        this.chosedIdxChanged == !(this.oldChoseIdx == this.chosedIdx);
+      }
+
+      chose(){
+        let idx = Math.floor(this.puzzle.length * Math.random());
+        this.chosedIdx = idx;
+        return idx;
+      }
+
+      isChanged(){
+        return this.chosedIdxChanged;
+      }
+
+      noChange(){
+      }
+
+      change(hostOpenIndex){
+        let otherIdx = this.puzzle.findIndex((_val, idx)=>{
+          return (idx != this.chosedIdx && idx != hostOpenIndex)
+        })
+        this.oldChoseIdx = this.chosedIdx;
+        this.chosedIdx = otherIdx;
+        this.chosedIdxChanged = !(this.oldChoseIdx == this.chosedIdx);
+      }
+    }
+
+    class Hoster{
+      constructor(puzzle){
+        this.puzzle = puzzle;
+      }
+
+      reset(puzzle){
+        this.puzzle = puzzle;
+        this.openDoorIndex = null;
+      }
+
+      openDoor(chosedIdx, carIndex){
+        let hostOptions = [];
+        this.puzzle.forEach((_val, idx) => {
+          if(idx != chosedIdx && idx != carIndex){
+            hostOptions.push(idx);
+          }
+        });
+        let idx = hostOptions[Math.floor(hostOptions.length * Math.random())];
+        this.openDoorIndex = idx;
+        return idx;
+      }
+    }
+
+    var counts = {
+      all: 0,
+      changed: 0,
+      noChanged: 0,
+      changedWin: 0,
+      noChangedWin: 0
+    }
+
+    function makeGameCount(){
+      counts.all = counts.all + 1;
+      if(montyHallGame.player.isChanged()){
+        counts.changed = counts.changed + 1;
+        if(montyHallGame.isPlayerWin()){
+          counts.changedWin = counts.changedWin + 1;
+        }
+      }else{
+        counts.noChanged = counts.noChanged + 1;
+        if(montyHallGame.isPlayerWin()){
+          counts.noChangedWin = counts.noChangedWin + 1;
+        }
+      }
+    }
+
+
+    var montyHallGame = new MontyHallGame();
+    function puzzleTd(doorNum){
+      return `<td id="door-${doorNum}" class="mystery"></td>`
+    }
+    function puzzleHtmlTemplate(){
+      return `<tr>
+          ${puzzleTd(0)}
+          ${puzzleTd(1)}
+          ${puzzleTd(2)}
+        </tr>`;
+    }
+
+    function makePuzzleVisualize(){
+      montyHallGame.reset()
+      document.querySelector("#puzzle tbody").innerHTML = puzzleHtmlTemplate();
+      document.getElementById("new-bu-wrapper").style.display = 'none';
+      document.getElementById("make-result-wrapper").style.display = 'none';
+      document.getElementById("open-door-wrapper").style.display = 'block';
+      document.getElementsByName('choices').forEach((t)=>t.checked=false);
+    }
+
+    function onOptionsClick(input){
+      montyHallGame.player.setChosedIdx(input.value);
+    }
+
+    function hostOpenDoor(){
+      if(!montyHallGame.gameActived){
+        alert("游戏结束，请新开一轮");
+        return;
+      }
+      let choiceInput = document.querySelector("[name=choices]:checked");
+      if(choiceInput){
+        montyHallGame.openDoor();
+        let td = document.getElementById(`door-${montyHallGame.openDoorIndex}`);
+        td.classList.remove("mystery");
+        td.classList.add('show-0');
+        document.getElementById("make-result-wrapper").style.display = 'block';
+      }else{
+        alert("需要指定一个选项")
+      }
+    }
+
+    function showAnswer(){
+      if(!montyHallGame.gameActived){
+        alert("游戏结束，请新开一轮");
+        return;
+      }
+      let choiceInput = document.querySelector("[name=choices]:checked");
+      if(!choiceInput){
+        alert("需要指定一个选项")
+        return false;
+      }
+      montyHallGame.puzzle.forEach((element, idx) => {
+        if(element==0){
+          document.getElementById(`door-${idx}`).className = "show-0"
+        }else{
+          document.getElementById(`door-${idx}`).className = "show-1"
+        }
+      });
+      document.getElementById("new-bu-wrapper").style.display = 'block';
+      montyHallGame.gameActived = false;
+      showCounts();
+    }
+
+    function changeChoice(){
+      if(!montyHallGame.gameActived){
+        alert("游戏结束，请新开一轮");
+        return;
+      }
+      let choiceInput = document.querySelector("[name=choices]:checked");
+      if(choiceInput){
+        montyHallGame.playerChange();
+        document.getElementById(`choices${montyHallGame.player.chosedIdx}`).click();
+        makeGameCount();
+        showAnswer();
+      }else{
+        alert("需要指定一个选项")
+      }
+    }
+
+    function noChangeChoice(){
+      if(!montyHallGame.gameActived){
+        alert("游戏结束，请新开一轮");
+        return;
+      }
+      let choiceInput = document.querySelector("[name=choices]:checked");
+      if(!choiceInput){
+        alert("需要指定一个选项")
+        return false;
+      }
+      makeGameCount();
+      showAnswer();
+    }
+
+    function showCounts(){
+      let resultHtml = `
+      <p>总次数:${counts.all}</p>
+      <p>总赢数: ${counts.changedWin + counts.noChangedWin}((${counts.all > 0 ? ((counts.changedWin + counts.noChangedWin)/counts.all).toFixed(3) : '-'}))</p>
+      <p>换门数: ${counts.changed}</p>
+      <p>换门赢: ${counts.changedWin}(${counts.changed > 0 ? (counts.changedWin/counts.changed).toFixed(3) : '-'})</p>
+      <p>不换数: ${counts.noChanged}</p>
+      <p>不换赢: ${counts.noChangedWin}(${counts.noChanged > 0 ? (counts.noChangedWin/counts.noChanged).toFixed(3) : '-'})</p>
+      `;
+      document.getElementById("result-counts").innerHTML = resultHtml;
+    }
+
+    async function sleep(time) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      });
+    }
+
+    async function massAutoPlay(num=100){
+      for(let i = 0;i<num; i++){
+        autoPlay();
+        await sleep(10);
+        showCounts();
+      }
+
+    }
+
+    function autoPlay(){
+      montyHallGame.reset();
+      montyHallGame.playerChose();
+      montyHallGame.openDoor();
+      if(Math.random() > 0.39999){
+        montyHallGame.playerChange();
+      }
+      montyHallGame.gameActived=false;
+      //console.log(`${+(new Date())}#>谜底: ${montyHallGame.carIndex}, 赢:${montyHallGame.isPlayerWin()}, 是否换门：${montyHallGame.player.isChanged()}, 最终答案：${montyHallGame.player.chosedIdx}, 开始选择：${montyHallGame.player.oldChoseIdx}`)
+
+      makeGameCount();
+    }
+  </script>
+</body>
+</html>
