@@ -19,7 +19,7 @@ body {
     margin: 60px auto 0;
 }
 
-.menu_box a {
+.menu_box button {
     width: 214px;
     height: 46px;
     text-align: center;
@@ -32,7 +32,7 @@ body {
     cursor: pointer;
 }
 
-.menu_box a:hover {
+.menu_box button:hover {
     background: #31190d;
     color: #FFA433;
 }
@@ -52,6 +52,24 @@ body {
     height: 14px;
     float: right;
     cursor: pointer
+}
+
+/* 先手/后手选择区域样式 */
+.player_side_selection {
+    margin-bottom: 15px;
+    padding: 5px;
+    border-bottom: 1px solid #5a4632;
+}
+
+.player_side_text {
+    margin-top: 5px;
+    font-weight: bold;
+    color: #FFA433;
+}
+
+h4 {
+    margin: 10px 0 5px;
+    color: #FFA433;
 }
 
 .bn_box input {

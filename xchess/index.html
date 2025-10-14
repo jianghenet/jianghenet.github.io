@@ -3,21 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>中国象棋 in html5</title>
+  <title>中国象棋</title>
 
   <link href="css/chess.css" rel="stylesheet" type="text/css">
   <!--[if lt IE 9]>
-<script> alert("对不起，您的浏览器不支持HTML5，请升级浏览器至IE9、firefox或者谷歌浏览器！")</script>
-< ![endif]-->
-  <script>
-
-    const DeepClone = (arr) => JSON.parse(JSON.stringify(arr));
-    jLibr = {
-      getEle: (id) => document.getElementById(id),
-      getDepth: () => document.querySelector("input[name='depth']:checked").value,
-      getClasli: () => document.querySelector("input[name='clasli']:checked").value,
-    }
-  </script>
+  <script> alert("对不起，您的浏览器不支持HTML5，请升级浏览器至微软Edge、FireFox或者谷歌浏览器！")</script>
+  < ![endif]-->
 </head>
 
 <body>
@@ -32,23 +23,56 @@
     </div>
   </div>
   <div class="menu_box" id="menuBox">
-    <div class="menu_init" id="indexBox"><a id="indexDy">人机对弈</a><a id="indexQj">挑战棋局</a><a id="stypeBtn">更换皮肤</a></div>
+    <div class="menu_init" id="indexBox"><button id="indexDy">人机对弈</button><button id="indexQj">挑战棋局</button><button
+        id="stypeBtn">更换皮肤</button></div>
     <div class="menu_dy" id="menuDy">
       <div class="menu_info">
         <div class="menu_fh" id="menuFh">X</div>
+        <!-- 添加选择先手/后手的选项 -->
+        <div class="player_side_selection" id="playerSideSelection">
+          <h4>选择先后手：</h4>
+          <label>
+            <input name="playerSide" type="radio" value="first" checked>
+            执红先行
+          </label>
+          <br />
+          <label>
+            <input name="playerSide" type="radio" value="second">
+            执黑后行
+          </label>
+          <div id="playerSideText" class="player_side_text">当前选择：执红先行</div>
+        </div>
         <label>
           <input name="depth" type="radio" value="2">
-          菜鸟水平</label>
+          菜鸟水平
+        </label>
         <br />
         <label>
           <input name="depth" type="radio" value="3" checked>
-          中级水平</label>
+          中级水平
+        </label>
         <br />
         <label>
           <input name="depth" type="radio" value="4">
-          高手水平</label>
+          高手水平
+        </label>
+        <br />
+        <label>
+          <input name="depth" type="radio" value="5">
+          资深水平
+        </label>
+        <br />
+        <label>
+          <input name="depth" type="radio" value="6">
+          专业水平
+        </label>
+        <br />
+        <label>
+          <input name="depth" type="radio" value="7">
+          专业高段
+        </label>
       </div>
-      <a id="playBtn">开始对弈</a>
+      <button id="playBtn">开始对弈</button>
     </div>
     <div class="menu_qj" id="menuQj">
       <div class="menu_info">
@@ -69,15 +93,11 @@
           <input name="clasli" type="radio" value="3">
           测试阵法</label>
       </div>
-      <a id="clasliBtn">开始挑战</a>
+      <button id="clasliBtn">开始挑战</button>
     </div>
   </div>
+  <script src="js/game.js"></script>
 
-  <script type="text/javascript" src="js/xiangqi-rules.js"></script>
-  <script type="text/javascript" src="js/chess-manuals.js"></script>
-  <script type="text/javascript" src="js/talice.js"></script>
-  <script type="text/javascript" src="js/chess-ai.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
 </body>
 
 </html>
